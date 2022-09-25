@@ -35,4 +35,3 @@ Los argumentos (semilla tamaño_tablero tamaño_población probabilidad_cruza pr
 * **Marcelo Calderón** - *Código - Documentación* - [Marchel0](https://github.com/Marchel0)
 * **Nicolás Cereceda** - *Código - Documentación* - [Nishiorman](https://github.com/Nishiorman)
 * **Carlos Poblete** - *Código - Documentación* - [CPoblet](https://github.com/CPoblet)
-* **Fuente de datos CSV** - [Fuente de datos CSV](https://datos.gob.cl/en/dataset/32677/resource/36a4295b-4000-4bdf-867a-1b62ef4b407a)
