@@ -3,15 +3,18 @@
 ## Propósito del Trabajo
 Desarrollar un programa utilizando el lenguaje de programación Python3 que implemente el
 problema de las N-Reinas usando algoritmos genéticos.
+
 El código contiene las siguientes funciones:
--Generar un número real randóminco entre [0 y 1].
--Generar un número entero randómico entre [1 y N].
--Inicializar la población.
--Calcular el fitness de un individuo.
--Seleccionar un individuo usando el método de la ruleta.
--Cruzar dos individuos con un punto de cruza.
--Mutar un individuo.
--Reducir la población.
+
+- Generar un número real randóminco entre [0 y 1].
+- Generar un número entero randómico entre [1 y N].
+- Inicializar la población.
+- Calcular el fitness de un individuo.
+- Seleccionar un individuo usando el método de la ruleta.
+- Cruzar dos individuos con un punto de cruza.
+- Mutar un individuo.
+- Reducir la población. 
+
 Además se contiene las siguientes parámetros:
 -Valor de la semilla.
 -Tamaño del tablero.
