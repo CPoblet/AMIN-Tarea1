@@ -26,6 +26,8 @@ Una vez descomprimido, se requerirá la aplicacion visual studio code (descargab
 Una vez descargado e instalado el programa, se deberá ir a la pestaña "extensiones", buscar la siguiente extension e instalarla:
 1.-Python
 Una vez instaladas se deberá ir a la pestaña archivo y abrir la carpeta descomprimida con anterioridad, una vez abierta la carpeta se deberá localizar el archivo llamado main.py y abrirlo, en la zona superior existirá pestaña llamada "Terminal", pulsarla y seleccionar "Nuevo Terminal", una vez abierta la terminal escribir el siguiente sin comillas:
+"pip install numpy"
+Esto instalará el numpy el cual es necesario para la ejecucion del programa, una vez finalizado escribir en la terminal el siguiente sin comillas:
 "python main.py semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones"
 Los argumentos (semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones) deben ser numero enteros.
 ## Este programa fue realizado en 🛠️
