@@ -61,19 +61,30 @@ def main(argv):
         print(ruleta_values)
 
         encontrados = False
-        individuo = seleccion_individuo(ruleta_values)
+        individuo1 = seleccion_individuo(ruleta_values)
         while not encontrados:
             individuo2 = seleccion_individuo(ruleta_values)
-            if individuo != individuo2:
+            if individuo1 != individuo2:
                 encontrados = True
-        print(individuo)
-        print(individuo2)
+        individuo1 = poblacion[individuo1]
+        individuo2 = poblacion[individuo2]
 
         c = random.randint(0, 100)
-        print(c)
         if c <= cruza:
-            print(poblacion[individuo])
-            print(poblacion[individuo2])
+            i_corte = random.randint(0, 7)
+            print(individuo1)
+            print(individuo2)
+            print("cruza")
+            print(i_corte)
+            print(individuo1[:i_corte])
+            print(individuo2[i_corte:])
+            print(np.concatenate((individuo1[:i_corte], individuo2[i_corte:])))
+            print(np.concatenate((individuo2[i_corte:], individuo1[:i_corte])))
+        
+        # else volver a elegir padres si no se cruzan, ciclo while
+        
+
+
         #print(random.uniform(0, 1))
         #solucion = np.array([0, 4, 7, 5, 2, 6, 1, 3])
         #max_choques = np.array([0, 1, 2, 3, 4, 5, 6, 7])
