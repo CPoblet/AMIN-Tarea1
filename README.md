@@ -38,7 +38,7 @@ Una vez instaladas se deberá ir a la pestaña archivo y abrir la carpeta descom
 
 Esto instalará el numpy el cual es necesario para la ejecucion del programa, una vez finalizado escribir en la terminal el siguiente sin comillas:
 
--"python main.py semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones"
+- "python main.py semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones"
 
 Los argumentos (semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones) deben ser numero enteros.
 ## Este programa fue realizado en 🛠️
