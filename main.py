@@ -21,7 +21,7 @@ def fitness(individuo, n):
     return max_choques - count
 
 
-def ruleta(fitness):
+def generar_ruleta(fitness):
     suma = np.sum(fitness)
     ruleta = np.array([])
     proporcion = fitness[0]/suma
@@ -33,56 +33,137 @@ def ruleta(fitness):
 
 
 def seleccion_individuo(ruleta):
+    rand = random.uniform(0, 1)
     for i in range(len(ruleta)):
-        rand = random.uniform(0, 1)
         if rand <= ruleta[i]:
             return i
 
 
+def cruzar_individuos(individuo1, individuo2, valor_cruza):
+    c = random.randint(0, 100)
+    if c <= valor_cruza:
+        i_corte = random.randint(0, len(individuo1)-1)
+        if i_corte == 0:
+            hijo1 = np.concatenate((individuo1[:i_corte+1], individuo2[i_corte+1:]))
+            hijo2 = np.concatenate((individuo2[:i_corte+1], individuo1[i_corte+1:]))
+        else:
+            hijo1 = np.concatenate((individuo1[:i_corte], individuo2[i_corte:]))
+            hijo2 = np.concatenate((individuo2[:i_corte], individuo1[i_corte:]))
+        """ print(individuo1)
+        print(individuo2)
+        print(i_corte)
+        print(hijo1)
+        print(hijo2) """
+        return np.array([hijo1, hijo2])
+    return np.array([])
+
+def rectificar_hijos(hijos):
+    modelo = np.arange(len(hijos[0]))
+    valores_faltantes1 = [x for x in modelo if x not in hijos[0]]
+    valores_faltantes2 = [x for x in modelo if x not in hijos[1]]
+    indices1 = np.array([], dtype=int)
+    indices2 = np.array([], dtype=int)
+    for i in range(len(valores_faltantes1)):
+        indices1 = np.append(indices1, np.where(hijos[0] == valores_faltantes2[i])[0])
+        indices2 = np.append(indices2, np.where(hijos[1] == valores_faltantes1[i])[0])
+
+    hijo1 = hijos[0].tolist()
+    hijo2 = hijos[1].tolist()
+    indices1 = indices1.tolist()
+    indices2 = indices2.tolist()
+    while len(valores_faltantes1) > 0 and len(valores_faltantes2) > 0:
+        rand_indice1 = random.choice(indices1)
+        rand_indice2 = random.choice(indices2)
+        rand_valor1 = random.choice(valores_faltantes1)
+        rand_valor2 = random.choice(valores_faltantes2)
+
+        hijo1[rand_indice1] = rand_valor1
+        hijo2[rand_indice2] = rand_valor2
+        valores_faltantes1.remove(rand_valor1)
+        valores_faltantes2.remove(rand_valor2)
+
+        index1 = indices1.index(rand_indice1)
+        if index1 % 2 != 0 or index1 == len(indices1)-1:
+            del indices1[index1-1]
+            del indices1[index1-1]
+        else:
+            del indices1[index1]
+            del indices1[index1]
+        index2 = indices2.index(rand_indice2)
+        if index2 % 2 != 0 or index2 == len(indices2)-1:
+            del indices2[index2-1]
+            del indices2[index2-1]
+        else:
+            del indices2[index2]
+            del indices2[index2]
+    return np.array([hijo1, hijo2])
+
+def mutacion(individuo):
+    indice1 = random.randint(0, len(individuo)-1)
+    indice2 = random.randint(0, len(individuo)-1)
+    while indice1 == indice2:
+        indice1 = random.randint(0, len(individuo)-1)
+        indice2 = random.randint(0, len(individuo)-1)
+    individuo[indice1], individuo[indice2] = individuo[indice2], individuo[indice1]
+    return individuo
+
 def main(argv):
-    if (len(argv) == 6):
+    if (len(argv) == 7):
         seed = int(argv[1])
         n = int(argv[2])
         p = int(argv[3])
         cruza = int(argv[4])
-        max_i = int(argv[5])
+        muta = int(argv[5])
+        max_i = int(argv[6])
         print(f'seed {seed}, n {n}, p {p}')
         np.random.seed(seed=seed)
 
         poblacion = generar_poblacion(n, p)
         print(poblacion)
+        termino = False
+        for j in range(max_i):
+            print(j)
+            fitness_values = np.array([], dtype=int)
+            for i in poblacion:
+                value = fitness(i, n)
+                if value == (n*n)-n:
+                    termino = True;
+                    print('encontrado')
+                    print(i)
+                fitness_values = np.append(fitness_values, value)
+            print(fitness_values)
 
-        fitness_values = np.array([], dtype=int)
-        for i in poblacion:
-            fitness_values = np.append(fitness_values, fitness(i, n))
-        print(fitness_values)
+            ruleta_values = generar_ruleta(fitness_values)
+            print(ruleta_values)
 
-        ruleta_values = ruleta(fitness_values)
-        print(ruleta_values)
+            poblacion_hijos = np.zeros((p, n), dtype=int)
+            index = 0
+            while index < p:
+                encontrados = False
+                individuo1 = seleccion_individuo(ruleta_values)
+                while not encontrados:
+                    individuo2 = seleccion_individuo(ruleta_values)
+                    if individuo1 != individuo2:
+                        encontrados = True
+                individuo1 = poblacion[individuo1]
+                individuo2 = poblacion[individuo2]
 
-        encontrados = False
-        individuo1 = seleccion_individuo(ruleta_values)
-        while not encontrados:
-            individuo2 = seleccion_individuo(ruleta_values)
-            if individuo1 != individuo2:
-                encontrados = True
-        individuo1 = poblacion[individuo1]
-        individuo2 = poblacion[individuo2]
+                hijos = cruzar_individuos(individuo1, individuo2, cruza)
+                if len(hijos) != 0:
+                    if len(np.unique(hijos[0])) != len(hijos[0]):
+                        hijos = rectificar_hijos(hijos)
+                    rand_mutacion = random.randint(0, 100)
+                    if rand_mutacion <= muta:
+                        hijos[0] = mutacion(hijos[0])
+                        hijos[1] = mutacion(hijos[1])
+                    for i in hijos:
+                        poblacion_hijos[index] = i
+                        index += 1
 
-        c = random.randint(0, 100)
-        if c <= cruza:
-            i_corte = random.randint(0, 7)
-            print(individuo1)
-            print(individuo2)
-            print("cruza")
-            print(i_corte)
-            print(individuo1[:i_corte])
-            print(individuo2[i_corte:])
-            print(np.concatenate((individuo1[:i_corte], individuo2[i_corte:])))
-            print(np.concatenate((individuo2[i_corte:], individuo1[:i_corte])))
-        
+            poblacion = poblacion_hijos
+            print(poblacion)
+
         # else volver a elegir padres si no se cruzan, ciclo while
-        
 
 
         #print(random.uniform(0, 1))
