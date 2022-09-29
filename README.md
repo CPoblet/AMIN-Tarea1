@@ -6,7 +6,7 @@ problema de las N-Reinas usando algoritmos genéticos.
 
 El código contiene las siguientes funciones:
 
-- Generar un número real randóminco entre [0 y 1].
+- Generar un número real randómico entre [0 y 1].
 - Generar un número entero randómico entre [1 y N].
 - Inicializar la población.
 - Calcular el fitness de un individuo.
@@ -27,7 +27,7 @@ Además se contiene las siguientes parámetros:
 ## Manual de Usuario 🛠️
 Ingresar a https://github.com/CPoblet/AMIN-Tarea1/, presionar el botón verde que dice "Code" y seleccionar posteriormente "Download ZIP".
 Una vez descargado el archivo AMIN-Tarea1-main.zip (Es necesario descargar WinRAR para descomprimir), se debe apretar click derecho y "Extraer aquí".
-Una vez descomprimido, se requerirá la aplicacion visual studio code (descargable desde este link: https://code.visualstudio.com/).
+Una vez descomprimido, se requerirá la aplicación visual studio code (descargable desde este link: https://code.visualstudio.com/).
 Una vez descargado e instalado el programa, se deberá ir a la pestaña "extensiones", buscar la siguiente extension e instalarla:
 
 - Python
@@ -36,11 +36,11 @@ Una vez instaladas se deberá ir a la pestaña archivo y abrir la carpeta descom
 
 - "pip install numpy"
 
-Esto instalará el numpy el cual es necesario para la ejecucion del programa, una vez finalizado escribir en la terminal el siguiente sin comillas:
+Esto instalará el numpy el cual es necesario para la ejecución del programa, una vez finalizado escribir en la terminal el siguiente sin comillas:
 
 - "python main.py semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones"
 
-Los argumentos (semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones) deben ser numero enteros.
+Los argumentos (semilla tamaño_tablero tamaño_población probabilidad_cruza probabilidad_mutación número_iteraciones) deben ser numero enteros positivos.
 ## Este programa fue realizado en 🛠️
 * [Visual Studio Code](https://code.visualstudio.com) - Visual Studio Code es un editor de código fuente desarrollado por Microsoft para Windows, Linux, macOS y Web.
 * [Python 3.10.0](https://www.python.org/downloads/release/python-3100/) - Lenguaje de programación.

@@ -3,8 +3,8 @@ import sys
 import numpy as np
 
 '''
-    Funcion usada para poder generar una matriz de "n" por "p" 
-    donde "n" es el tamaño del tablero y "p" es el tamaño de la poblacion.
+    Función usada para poder generar una matriz de "n" por "p" 
+    donde "n" es el tamaño del tablero y "p" es el tamaño de la población.
 '''
 def generar_poblacion(n, p):
     poblacion = np.zeros((p, n), dtype=int)
@@ -14,7 +14,7 @@ def generar_poblacion(n, p):
     return poblacion
 
 '''
-    Funcion que genera el fitness del individuo pedido.
+    Función que genera el fitness del individuo pedido.
 '''
 def fitness(individuo, n):
     count = 0
@@ -26,7 +26,7 @@ def fitness(individuo, n):
     return max_choques - count
 
 '''
-    Funcion para generar una ruleta que esta dividida equivalente al fitness 
+    Función para generar una ruleta que esta dividida equivalente al fitness 
     de cada individuo.
 '''
 def generar_ruleta(fitness):
@@ -40,7 +40,7 @@ def generar_ruleta(fitness):
     return ruleta
 
 '''
-    Funcion que devuelve la posicion de un individuo a base de la ruleta.
+    Función que devuelve la posición de un individuo a base de la ruleta.
 '''
 def seleccion_individuo(ruleta):
     rand = random.uniform(0, 1)
@@ -49,7 +49,7 @@ def seleccion_individuo(ruleta):
             return i
 
 '''
-    Funcion que devuelve 2 hijos de la cruza entre 2 individuos distintos dado un punto de corte aleatorio.
+    Función que devuelve 2 hijos de la cruza entre 2 individuos distintos dado un punto de corte aleatorio.
 '''
 def cruzar_individuos(individuo1, individuo2, valor_cruza):
     c = random.randint(0, 100)
@@ -65,8 +65,8 @@ def cruzar_individuos(individuo1, individuo2, valor_cruza):
     return np.array([])
 
 '''
-    Funcion que es utilizada para arreglar los hijos que generados por la cruza tienen una o mas
-    posciciones iguales las cuales se deben cambiadas o modificadas por otra que no se repita. 
+    Función que es utilizada para arreglar los hijos que generados por la cruza tienen una o mas
+    posiciones iguales las cuales se deben cambiadas o modificadas por otra que no se repita. 
 '''
 def rectificar_hijos(hijos):
     modelo = np.arange(len(hijos[0]))
@@ -110,7 +110,7 @@ def rectificar_hijos(hijos):
     return np.array([hijo1, hijo2])
 
 '''
-    Funcion que intercambia 2 posiciones de un individuo.
+    Función que intercambia 2 posiciones de un individuo.
 '''
 def mutacion(individuo):
     indice1 = random.randint(0, len(individuo)-1)
@@ -128,19 +128,26 @@ def main(argv):
         p = int(argv[3])    # Tamaño de la poblacion
         cruza = int(argv[4])# Porcentaje de cruza 
         muta = int(argv[5]) # Porcentaje de mutacion
-        max_i = int(argv[6])# Maximo de iteraciones o generaciones
+        max_i = int(argv[6])# Máximo de iteraciones o generaciones
         print(f'seed {seed}, n {n}, p {p}')
         np.random.seed(seed=seed)
-
+        solucion = True
+        max = 0
+        individuo = np.zeros(n)
         poblacion = generar_poblacion(n, p)
         for j in range(max_i):# aca inicia 
             print(j)
             fitness_values = np.array([], dtype=int)
             for i in poblacion:
                 value = fitness(i, n)
+                if(value > max):
+                    max = value 
+                    individuo = i
                 if value == (n*n)-n: # En caso de tener un fitness perfecto termina la ejecución.
-                    print('encontrado')
-                    print(i)
+                    solucion = False
+                    print('Se encontró individuo con una solucion.')
+                    #print(i)
+                    print(f'{i},{max}')
                     sys.exit()
                 fitness_values = np.append(fitness_values, value)
 
@@ -173,8 +180,11 @@ def main(argv):
 
             poblacion = poblacion_hijos
             print(poblacion)
+        if(solucion):
+            print('La mejor solucion encontrada fue de : ')
+            print(f'{individuo},{max}')
     else:
-        print('Error: Parametros incorrectos')
+        print('Error: Parámetros incorrectos')
 
 
 if __name__ == '__main__':
