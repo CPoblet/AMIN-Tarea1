@@ -3,7 +3,7 @@ import sys
 import numpy as np
 
 
-def generar_poblacion(n=8, p=10):
+def generar_poblacion(n, p):
     poblacion = np.zeros((p, n), dtype=int)
     for i in poblacion:
         i[...] = np.arange(0, n)
@@ -49,11 +49,6 @@ def cruzar_individuos(individuo1, individuo2, valor_cruza):
         else:
             hijo1 = np.concatenate((individuo1[:i_corte], individuo2[i_corte:]))
             hijo2 = np.concatenate((individuo2[:i_corte], individuo1[i_corte:]))
-        """ print(individuo1)
-        print(individuo2)
-        print(i_corte)
-        print(hijo1)
-        print(hijo2) """
         return np.array([hijo1, hijo2])
     return np.array([])
 
@@ -119,22 +114,18 @@ def main(argv):
         np.random.seed(seed=seed)
 
         poblacion = generar_poblacion(n, p)
-        print(poblacion)
-        termino = False
         for j in range(max_i):
             print(j)
             fitness_values = np.array([], dtype=int)
             for i in poblacion:
                 value = fitness(i, n)
                 if value == (n*n)-n:
-                    termino = True;
                     print('encontrado')
                     print(i)
+                    sys.exit()
                 fitness_values = np.append(fitness_values, value)
-            print(fitness_values)
 
             ruleta_values = generar_ruleta(fitness_values)
-            print(ruleta_values)
 
             poblacion_hijos = np.zeros((p, n), dtype=int)
             index = 0
@@ -157,19 +148,12 @@ def main(argv):
                         hijos[0] = mutacion(hijos[0])
                         hijos[1] = mutacion(hijos[1])
                     for i in hijos:
-                        poblacion_hijos[index] = i
-                        index += 1
+                        if index < p:
+                            poblacion_hijos[index] = i
+                            index += 1
 
             poblacion = poblacion_hijos
             print(poblacion)
-
-        # else volver a elegir padres si no se cruzan, ciclo while
-
-
-        #print(random.uniform(0, 1))
-        #solucion = np.array([0, 4, 7, 5, 2, 6, 1, 3])
-        #max_choques = np.array([0, 1, 2, 3, 4, 5, 6, 7])
-        #print(f'prueba: {fitness(solucion, n)}')
     else:
         print('Error: Parametros incorrectos')
 
