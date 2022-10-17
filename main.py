@@ -2,15 +2,18 @@ import random
 import sys
 import numpy as np
 
+def random_entero(n):
+    return np.random.randint(0, n-1)
+
 '''
     Función usada para poder generar una matriz de "n" por "p" 
     donde "n" es el tamaño del tablero y "p" es el tamaño de la población.
 '''
-def generar_poblacion(n, p):
-    poblacion = np.zeros((p, n), dtype=int)
-    for i in poblacion:
-        i[...] = np.arange(0, n)
-        np.random.shuffle(i)
+def generar_colonia(n):
+    poblacion = np.zeros((n, n), dtype=int)
+    for i in range(len(poblacion)):
+        poblacion[i][0] = random_entero(n) 
+        
     return poblacion
 
 '''
@@ -48,144 +51,25 @@ def seleccion_individuo(ruleta):
         if rand <= ruleta[i]:
             return i
 
-'''
-    Función que devuelve 2 hijos de la cruza entre 2 individuos distintos dado un punto de corte aleatorio.
-'''
-def cruzar_individuos(individuo1, individuo2, valor_cruza):
-    c = random.randint(0, 100)
-    if c <= valor_cruza:
-        i_corte = random.randint(0, len(individuo1)-1)
-        if i_corte == 0:
-            hijo1 = np.concatenate((individuo1[:i_corte+1], individuo2[i_corte+1:]))
-            hijo2 = np.concatenate((individuo2[:i_corte+1], individuo1[i_corte+1:]))
-        else:
-            hijo1 = np.concatenate((individuo1[:i_corte], individuo2[i_corte:]))
-            hijo2 = np.concatenate((individuo2[:i_corte], individuo1[i_corte:]))
-        return np.array([hijo1, hijo2])
-    return np.array([])
-
-'''
-    Función que es utilizada para arreglar los hijos que generados por la cruza tienen una o mas
-    posiciones iguales las cuales se deben cambiadas o modificadas por otra que no se repita. 
-'''
-def rectificar_hijos(hijos):
-    modelo = np.arange(len(hijos[0]))
-    valores_faltantes1 = [x for x in modelo if x not in hijos[0]] 
-    valores_faltantes2 = [x for x in modelo if x not in hijos[1]]
-    indices1 = np.array([], dtype=int)
-    indices2 = np.array([], dtype=int)
-    for i in range(len(valores_faltantes1)):
-        indices1 = np.append(indices1, np.where(hijos[0] == valores_faltantes2[i])[0])
-        indices2 = np.append(indices2, np.where(hijos[1] == valores_faltantes1[i])[0])
-
-    hijo1 = hijos[0].tolist()
-    hijo2 = hijos[1].tolist()
-    indices1 = indices1.tolist()
-    indices2 = indices2.tolist()
-    while len(valores_faltantes1) > 0 and len(valores_faltantes2) > 0:
-        rand_indice1 = random.choice(indices1)
-        rand_indice2 = random.choice(indices2)
-        rand_valor1 = random.choice(valores_faltantes1)
-        rand_valor2 = random.choice(valores_faltantes2)
-
-        hijo1[rand_indice1] = rand_valor1
-        hijo2[rand_indice2] = rand_valor2
-        valores_faltantes1.remove(rand_valor1)
-        valores_faltantes2.remove(rand_valor2)
-
-        index1 = indices1.index(rand_indice1)
-        if index1 % 2 != 0 or index1 == len(indices1)-1:
-            del indices1[index1-1]
-            del indices1[index1-1]
-        else:
-            del indices1[index1]
-            del indices1[index1]
-        index2 = indices2.index(rand_indice2)
-        if index2 % 2 != 0 or index2 == len(indices2)-1:
-            del indices2[index2-1]
-            del indices2[index2-1]
-        else:
-            del indices2[index2]
-            del indices2[index2]
-    return np.array([hijo1, hijo2])
-
-'''
-    Función que intercambia 2 posiciones de un individuo.
-'''
-def mutacion(individuo):
-    indice1 = random.randint(0, len(individuo)-1)
-    indice2 = random.randint(0, len(individuo)-1)
-    while indice1 == indice2:
-        indice1 = random.randint(0, len(individuo)-1)
-        indice2 = random.randint(0, len(individuo)-1)
-    individuo[indice1], individuo[indice2] = individuo[indice2], individuo[indice1]
-    return individuo
-
 def main(argv):
-    if (len(argv) == 7):
-        seed = int(argv[1]) # Semilla  
-        n = int(argv[2])    # Tamaño del tablero
-        p = int(argv[3])    # Tamaño de la poblacion
-        cruza = int(argv[4])# Porcentaje de cruza 
-        muta = int(argv[5]) # Porcentaje de mutacion
-        max_i = int(argv[6])# Máximo de iteraciones o generaciones
-        print(f'seed {seed}, n {n}, p {p}')
-        np.random.seed(seed=seed)
-        solucion = True
-        max = 0
-        individuo = np.zeros(n)
-        poblacion = generar_poblacion(n, p)
-        for j in range(max_i):# aca inicia 
-            print(j)
-            fitness_values = np.array([], dtype=int)
-            for i in poblacion:
-                value = fitness(i, n)
-                if(value > max):
-                    max = value 
-                    individuo = i
-                if value == (n*n)-n: # En caso de tener un fitness perfecto termina la ejecución.
-                    solucion = False
-                    print('Se encontró individuo con una solucion.')
-                    #print(i)
-                    print(f'{i},{max}')
-                    sys.exit()
-                fitness_values = np.append(fitness_values, value)
+    if (len(argv) == 2):
+        colonia = int(argv[1])
+        """     
+        archivo_entrada = argv[1]
+        semilla = argv[2]
+        colonia = argv[3]
+        iteraciones = argv[4]
+        evaporacion = argv[5]
+        heuristica = argv[6]
+        prob_limite = argv[7] 
+        """
 
-            ruleta_values = generar_ruleta(fitness_values)
+        print(generar_colonia(colonia))
 
-            poblacion_hijos = np.zeros((p, n), dtype=int)
-            index = 0
-            while index < p:
-                encontrados = False
-                individuo1 = seleccion_individuo(ruleta_values)
-                while not encontrados:
-                    individuo2 = seleccion_individuo(ruleta_values)
-                    if individuo1 != individuo2:
-                        encontrados = True
-                individuo1 = poblacion[individuo1]
-                individuo2 = poblacion[individuo2]
-
-                hijos = cruzar_individuos(individuo1, individuo2, cruza)
-                if len(hijos) != 0:
-                    if len(np.unique(hijos[0])) != len(hijos[0]):
-                        hijos = rectificar_hijos(hijos)
-                    rand_mutacion = random.randint(0, 100)
-                    if rand_mutacion <= muta:
-                        hijos[0] = mutacion(hijos[0])
-                        hijos[1] = mutacion(hijos[1])
-                    for i in hijos:
-                        if index < p:
-                            poblacion_hijos[index] = i
-                            index += 1
-
-            poblacion = poblacion_hijos
-            print(poblacion)
-        if(solucion):
-            print('La mejor solucion encontrada fue de : ')
-            print(f'{individuo},{max}')
     else:
         print('Error: Parámetros incorrectos')
 
 
 if __name__ == '__main__':
     main(sys.argv)
+
